@@ -1,0 +1,38 @@
+{
+  "name": "h5-verify",
+  "version": "1.0.1",
+  "description": "Jigsaw validation",
+  "repository": "",
+  "license": "MIT",
+  "main": "dist/verify.js",
+  "keywords": [
+    "verify",
+    "vue-verify",
+    "react-verify",
+    "jigsaw",
+    "js-jigsaw"
+  ],
+  "scripts": {
+    "build": "npm run build-debug && npm run build-min",
+    "build-debug": "webpack",
+    "build-min": "cross-env NODE_ENV=production webpack",
+    "build-watch": "webpack --watch",
+    "prepublish": "npm run build"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "autoprefixer": "^9.7.3",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "cross-env": "^5.2.0",
+    "css-loader": "^3.2.1",
+    "file-loader": "^5.0.2",
+    "postcss-loader": "^3.0.0",
+    "style-loader": "^1.0.1",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "url-loader": "^3.0.0",
+    "webpack": "^4.5.0",
+    "webpack-cli": "^3.1.2"
+  }
+}
