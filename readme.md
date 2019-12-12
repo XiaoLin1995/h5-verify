@@ -2,6 +2,10 @@
 
 > Jigsaw validation
 
+## Demo
+
+(点击浏览 demo)[https://xiaolin1995.github.io/h5-verify/dist/index.html]
+
 
 ## Install
 
@@ -21,3 +25,4 @@ const verify = new h5Verify(element, {
   sliderText: 'Slide to unlock'
 })
 ```
+
