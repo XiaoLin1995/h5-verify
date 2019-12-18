@@ -1,10 +1,10 @@
 {
   "name": "h5-verify",
-  "version": "1.0.2",
+  "version": "1.1.1",
   "description": "Jigsaw validation",
   "repository": "",
   "license": "MIT",
-  "main": "dist/verify.js",
+  "main": "dist/verify.min.js",
   "keywords": [
     "verify",
     "vue-verify",

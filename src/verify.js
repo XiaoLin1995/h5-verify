@@ -27,9 +27,10 @@ const {
   sliderRadius: r // 滑块半径
 } = defaultConfig
 
-class Jigsaw {
+class H5Verfity {
   constructor (el, {
-    options,
+    images,
+    sliderText,
     onSuccess,
     onFail,
     onRefresh
@@ -39,12 +40,12 @@ class Jigsaw {
       width: w + 'px',
       margin: '0 auto'
     })
-    const optionsDefault = {
-      images: [],
-      sliderText: 'Slide to unlock'
+    if (!isArray(images)) images = []
+    const options = {
+      images,
+      sliderText: sliderText || 'Slide to unlock'
     }
-    this.options = Object.assign(optionsDefault, options)
-    if (!isArray(this.options.images)) this.options.images = []
+    this.options = options
     this.el = el
     this.onSuccess = onSuccess
     this.onFail = onFail
@@ -212,5 +213,7 @@ class Jigsaw {
   }
 }
 
-window.Jigsaw = Jigsaw
-export default Jigsaw
+window.H5Verfity = H5Verfity
+export default function(el, options) {
+  return new H5Verfity(el, options)
+} 

@@ -4,31 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title></title>
+  <title>Document</title>
 </head>
 <body>
   <div id="div"></div>
   <script src="./verify.min.js"></script>
   <script>
-    const $el = document.getElementById("div")
-    const a = new Jigsaw($el, {
-      options: {
-        images: [
-          // 'https://picsum.photos/id/519/300/150',
-          // 'https://picsum.photos/id/436/300/150',
-          // 'https://picsum.photos/id/443/300/150'
-        ],
-        sliderText: 'Slide to unlock'
-      },
-      onSuccess: () => {
-        console.log('onSuccess')
-      },
-      onFail: () => {
-        console.log('onFail')
-      },
-      onRefresh: () => {
-        console.log('onRefresh')
-      }
+    var div = document.getElementById('div')
+    new H5Verfity(div, {
+      images: [],
+      sliderText: 'Slide to unlock'
     })
   </script>
 </body>

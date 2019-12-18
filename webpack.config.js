@@ -34,10 +34,10 @@ module.exports = {
           {
             loader: 'url-loader',
             options: {
-              limit: 1024,
+              limit: 1024 * 200, // 此处单位为字节 1MB=1024k 1k=1024字节
               name:'[name].[ext]',
               outputPath: 'img',
-              publicPath: './img'
+              publicPath: './'
             }
           }
         ]
