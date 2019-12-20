@@ -14,7 +14,7 @@ import {
   mulNum
 } from './libs/number'
 import defaultConfig from './config'
-import './verify.css'
+import './verify.scss'
 
 const { 
   deviation, // 滑块校验时，允许的偏差范围
@@ -62,19 +62,20 @@ class H5Verfity {
 
   initDOM () {
     const canvas = createCanvas(w, h) // 画布
-    canvas.setAttribute('class', classNameHead + 'canvas')
+    canvas.setAttribute('class', classNameHead + '-canvas')
     const block = canvas.cloneNode(true) // 滑块
-    const sliderContainer = createElement('div', classNameHead + 'sliderContainer')
-    const refreshIcon = createElement('div', classNameHead + 'refreshIcon')
-    const sliderMask = createElement('div', classNameHead + 'sliderMask')
-    const slider = createElement('div', classNameHead + 'slider')
-    const sliderIcon = createElement('span', classNameHead + 'sliderIcon')
-    const text = createElement('span', classNameHead + 'sliderText')
+    const sliderContainer = createElement('div', classNameHead + '-wrapper')
+    const refreshIcon = createElement('div', classNameHead + '-refreshIcon')
+    const sliderMask = createElement('div', classNameHead + '-sliderMask')
+    const slider = createElement('div', classNameHead + '-slider')
+    const sliderIcon = createElement('span', classNameHead + '-sliderIcon')
+    const text = createElement('span', classNameHead + '-sliderText')
 
-    block.className = classNameHead+ 'block'
+    addClass(block, classNameHead + '-block')
     text.innerHTML = this.options.sliderText
 
     const el = this.el
+    addClass(el, classNameHead + '-container')
     el.appendChild(canvas)
     el.appendChild(refreshIcon)
     el.appendChild(block)
@@ -146,13 +147,13 @@ class H5Verfity {
       const eventY = e.clientY || e.touches[0].clientY
       const moveX = Math.round(eventX - originX)
       const moveY = Math.round(eventY - originY)
-      if (moveX < 0 || moveX + l >= w) return false
+      if (moveX < 0 || moveX + l > w) return false
       this.slider.style.transition = ''
       this.slider.style.left = moveX + 'px'
       this.block.style.left = L + moveX >= w ? w - L + 'px' : moveX + 'px'
 
-      addClass(this.sliderContainer, classNameHead + 'sliderContainer_active')
-      this.sliderMask.style.width = moveX + 'px'
+      addClass(this.sliderContainer, classNameHead + '--moving')
+      this.sliderMask.style.width = moveX + 40 + 'px'
       trail.push(moveY)
     }
 
@@ -161,19 +162,19 @@ class H5Verfity {
       isMouseDown = false
       const eventX = e.clientX || e.changedTouches[0].clientX
       if (eventX == originX) return false
-      removeClass(this.sliderContainer, classNameHead + 'sliderContainer_active')
+      removeClass(this.sliderContainer, classNameHead + '--moving')
       this.trail = trail
       const { spliced, verified } = this.verify()
       if (spliced) {
         if (verified) {
-          addClass(this.sliderContainer, classNameHead + 'sliderContainer_success')
+          addClass(this.sliderContainer, classNameHead + '--success')
           typeof this.onSuccess === 'function' && this.onSuccess()
         } else {
-          addClass(this.sliderContainer, classNameHead + 'sliderContainer_fail')
+          addClass(this.sliderContainer, classNameHead + '--error')
           this.reset()
         }
       } else {
-        addClass(this.sliderContainer, classNameHead + 'sliderContainer_fail')
+        addClass(this.sliderContainer, classNameHead + '--error')
         typeof this.onFail === 'function' && this.onFail()
         setTimeout(() => {
           this.reset()
@@ -203,7 +204,7 @@ class H5Verfity {
   }
 
   reset () {
-    this.sliderContainer.className = classNameHead + 'sliderContainer'
+    this.sliderContainer.className = classNameHead + '-wrapper'
     this.slider.style.left = 0
     this.block.style.left = 0
     this.slider.style.transition = 'left 0.3s'
@@ -214,6 +215,4 @@ class H5Verfity {
 }
 
 window.H5Verfity = H5Verfity
-export default function(el, options) {
-  return new H5Verfity(el, options)
-} 
+export default H5Verfity

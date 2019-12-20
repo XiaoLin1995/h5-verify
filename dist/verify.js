@@ -173,7 +173,7 @@ var config = {
   sliderLen: 40, // 滑块边长
   sliderRealLen: 0, // 滑块实际边长
   sliderRadius: 9, // 滑块半径
-  classNameHead: 'jigsaw-'
+  classNameHead: 'jigsaw'
 };
 config.sliderRealLen = config.sliderLen + config.sliderRadius * 2 + config.borderWidth * 2;
 
@@ -191,10 +191,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-exports.default = function (el, options) {
-  return new H5Verfity(el, options);
-};
 
 var _utils = __webpack_require__(3);
 
@@ -259,19 +255,20 @@ var H5Verfity = function () {
     key: 'initDOM',
     value: function initDOM() {
       var canvas = (0, _utils.createCanvas)(w, h); // 画布
-      canvas.setAttribute('class', classNameHead + 'canvas');
+      canvas.setAttribute('class', classNameHead + '-canvas');
       var block = canvas.cloneNode(true); // 滑块
-      var sliderContainer = (0, _utils.createElement)('div', classNameHead + 'sliderContainer');
-      var refreshIcon = (0, _utils.createElement)('div', classNameHead + 'refreshIcon');
-      var sliderMask = (0, _utils.createElement)('div', classNameHead + 'sliderMask');
-      var slider = (0, _utils.createElement)('div', classNameHead + 'slider');
-      var sliderIcon = (0, _utils.createElement)('span', classNameHead + 'sliderIcon');
-      var text = (0, _utils.createElement)('span', classNameHead + 'sliderText');
+      var sliderContainer = (0, _utils.createElement)('div', classNameHead + '-wrapper');
+      var refreshIcon = (0, _utils.createElement)('div', classNameHead + '-refreshIcon');
+      var sliderMask = (0, _utils.createElement)('div', classNameHead + '-sliderMask');
+      var slider = (0, _utils.createElement)('div', classNameHead + '-slider');
+      var sliderIcon = (0, _utils.createElement)('span', classNameHead + '-sliderIcon');
+      var text = (0, _utils.createElement)('span', classNameHead + '-sliderText');
 
-      block.className = classNameHead + 'block';
+      (0, _utils.addClass)(block, classNameHead + '-block');
       text.innerHTML = this.options.sliderText;
 
       var el = this.el;
+      (0, _utils.addClass)(el, classNameHead + '-container');
       el.appendChild(canvas);
       el.appendChild(refreshIcon);
       el.appendChild(block);
@@ -356,13 +353,13 @@ var H5Verfity = function () {
         var eventY = e.clientY || e.touches[0].clientY;
         var moveX = Math.round(eventX - originX);
         var moveY = Math.round(eventY - originY);
-        if (moveX < 0 || moveX + l >= w) return false;
+        if (moveX < 0 || moveX + l > w) return false;
         _this2.slider.style.transition = '';
         _this2.slider.style.left = moveX + 'px';
         _this2.block.style.left = L + moveX >= w ? w - L + 'px' : moveX + 'px';
 
-        (0, _utils.addClass)(_this2.sliderContainer, classNameHead + 'sliderContainer_active');
-        _this2.sliderMask.style.width = moveX + 'px';
+        (0, _utils.addClass)(_this2.sliderContainer, classNameHead + '--moving');
+        _this2.sliderMask.style.width = moveX + 40 + 'px';
         trail.push(moveY);
       };
 
@@ -371,7 +368,7 @@ var H5Verfity = function () {
         isMouseDown = false;
         var eventX = e.clientX || e.changedTouches[0].clientX;
         if (eventX == originX) return false;
-        (0, _utils.removeClass)(_this2.sliderContainer, classNameHead + 'sliderContainer_active');
+        (0, _utils.removeClass)(_this2.sliderContainer, classNameHead + '--moving');
         _this2.trail = trail;
 
         var _verify = _this2.verify(),
@@ -380,14 +377,14 @@ var H5Verfity = function () {
 
         if (spliced) {
           if (verified) {
-            (0, _utils.addClass)(_this2.sliderContainer, classNameHead + 'sliderContainer_success');
+            (0, _utils.addClass)(_this2.sliderContainer, classNameHead + '--success');
             typeof _this2.onSuccess === 'function' && _this2.onSuccess();
           } else {
-            (0, _utils.addClass)(_this2.sliderContainer, classNameHead + 'sliderContainer_fail');
+            (0, _utils.addClass)(_this2.sliderContainer, classNameHead + '--error');
             _this2.reset();
           }
         } else {
-          (0, _utils.addClass)(_this2.sliderContainer, classNameHead + 'sliderContainer_fail');
+          (0, _utils.addClass)(_this2.sliderContainer, classNameHead + '--error');
           typeof _this2.onFail === 'function' && _this2.onFail();
           setTimeout(function () {
             _this2.reset();
@@ -421,7 +418,7 @@ var H5Verfity = function () {
   }, {
     key: 'reset',
     value: function reset() {
-      this.sliderContainer.className = classNameHead + 'sliderContainer';
+      this.sliderContainer.className = classNameHead + '-wrapper';
       this.slider.style.left = 0;
       this.block.style.left = 0;
       this.slider.style.transition = 'left 0.3s';
@@ -435,6 +432,7 @@ var H5Verfity = function () {
 }();
 
 window.H5Verfity = H5Verfity;
+exports.default = H5Verfity;
 
 /***/ }),
 /* 3 */
@@ -450,8 +448,10 @@ exports.isArray = undefined;
 exports.createCanvas = createCanvas;
 exports.createImg = createImg;
 exports.createElement = createElement;
+exports.hasClass = hasClass;
 exports.addClass = addClass;
 exports.removeClass = removeClass;
+exports.toggleClass = toggleClass;
 exports.getRandomImgSrc = getRandomImgSrc;
 exports.drawCanvas = drawCanvas;
 
@@ -519,13 +519,39 @@ function createElement(tagName, className) {
   return elment;
 }
 
-function addClass(tag, className) {
-  tag.classList.add(className);
+function hasClass(obj, cls) {
+  return obj.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
 }
 
-function removeClass(tag, className) {
-  tag.classList.remove(className);
+function addClass(obj, cls) {
+  if (!hasClass(obj, cls)) {
+    if (obj.className) obj.className += ' ';
+    obj.className += cls;
+  }
 }
+
+function removeClass(obj, cls) {
+  if (hasClass(obj, cls)) {
+    var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+    obj.className = obj.className.replace(reg, ' ');
+  }
+}
+
+function toggleClass(obj, cls) {
+  if (hasClass(obj, cls)) {
+    removeClass(obj, cls);
+  } else {
+    addClass(obj, cls);
+  }
+}
+
+// export function addClass (tag, className) {
+//   tag.classList.add(className)
+// }
+
+// export function removeClass (tag, className) {
+//   tag.classList.remove(className)
+// }
 
 function getRandomImgSrc(images) {
   // '//picsum.photos/300/150/?image=' + randomNum(0, 1084)
@@ -566,6 +592,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 var content = __webpack_require__(6);
+content = content.__esModule ? content.default : content;
 
 if (typeof content === 'string') {
   content = [[module.i, content, '']];
@@ -587,12 +614,16 @@ if (content.locals) {
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(7)(false);
 // Imports
-var getUrl = __webpack_require__(8);
-var ___CSS_LOADER_URL___0___ = getUrl(__webpack_require__(9));
+var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(7);
+var ___CSS_LOADER_GET_URL_IMPORT___ = __webpack_require__(8);
+var ___CSS_LOADER_URL_IMPORT_0___ = __webpack_require__(9);
+exports = ___CSS_LOADER_API_IMPORT___(false);
+var ___CSS_LOADER_URL_REPLACEMENT_0___ = ___CSS_LOADER_GET_URL_IMPORT___(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-exports.push([module.i, "\nhtml {\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  -webkit-text-size-adjust: 100%;\n  -ms-text-size-adjust: 100%;\n  -ms-overflow-style: scrollbar;\n  -webkit-tap-highlight-color: transparent;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  -webkit-touch-callout: none;\n}\n\n.jigsaw-block {\n  position: absolute;\n  left: 0;\n  top: 0;\n  cursor: pointer;\n  cursor: -webkit-grab;\n  cursor: grab;\n}\n\n.jigsaw-block:active {\n  cursor: pointer;\n  cursor: -webkit-grabbing;\n  cursor: grabbing;\n}\n\n.jigsaw-sliderContainer {\n  position: relative;\n  text-align: center;\n  width: 300px;\n  height: 38px;\n  line-height: 38px;\n  margin-top: 15px;\n  background: #f7f9fa;\n  color: #45494c;\n  border: 1px solid #e4e7eb;\n}\n.jigsaw-sliderContainer, .jigsaw-sliderContainer * {\n  -webkit-box-sizing: content-box;\n          box-sizing: content-box;\n}\n \n.jigsaw-sliderContainer_active .jigsaw-slider {\n  height: 38px;\n  top: -1px;\n  border: 1px solid #1991FA;\n}\n\n.jigsaw-sliderContainer_active .jigsaw-sliderMask {\n  height: 38px;\n  border-width: 1px;\n}\n\n.jigsaw-sliderContainer_success .jigsaw-slider {\n  height: 38px;\n  top: -1px;\n  border: 1px solid #52CCBA;\n  background-color: #52CCBA !important;\n}\n\n.jigsaw-sliderContainer_success .jigsaw-sliderMask {\n  height: 38px;\n  border: 1px solid #52CCBA;\n  background-color: #D2F4EF;\n}\n\n.jigsaw-sliderContainer_success .jigsaw-sliderIcon {\n  background-position: 0 -13px !important;\n}\n\n.jigsaw-sliderContainer_fail .jigsaw-slider {\n  height: 38px;\n  top: -1px;\n  border: 1px solid #f57a7a;\n  background-color: #f57a7a !important;\n}\n\n.jigsaw-sliderContainer_fail .jigsaw-sliderMask {\n  height: 38px;\n  border: 1px solid #f57a7a;\n  background-color: #fce1e1;\n}\n\n.jigsaw-sliderContainer_fail .jigsaw-sliderIcon {\n  top: 14px;\n  background-position: 0 -67px !important;\n}\n.jigsaw-sliderContainer_active .jigsaw-sliderText, .jigsaw-sliderContainer_success .jigsaw-sliderText, .jigsaw-sliderContainer_fail .jigsaw-sliderText {\n  display: none;\n}\n\n.jigsaw-sliderMask {\n  position: absolute;\n  left: -1px;\n  top: -1px;\n  height: 100%;\n  border: 0 solid #1991FA;\n  background: #D1E9FE;\n}\n\n.jigsaw-slider {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 40px;\n  height: 40px;\n  background: #fff;\n  -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);\n          box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);\n  -webkit-transition: background .2s linear;\n  transition: background .2s linear;\n  cursor: pointer;\n  cursor: -webkit-grab;\n  cursor: grab;\n}\n\n.jigsaw-slider:active {\n  cursor: -webkit-grabbing;\n  cursor: grabbing;\n}\n\n.jigsaw-slider:hover {\n  background: #1991FA;\n}\n\n.jigsaw-slider:hover .jigsaw-sliderIcon {\n  background-position: 0 0;\n}\n\n.jigsaw-sliderIcon {\n  position: absolute;\n  top: 15px;\n  left: 13px;\n  width: 14px;\n  height: 12px;\n  background: url(" + ___CSS_LOADER_URL___0___ + ") 0 -26px;\n  background-size: 32px 544px;;\n}\n\n.jigsaw-refreshIcon {\n  position: absolute;\n  right: 0;\n  top: 0;\n  width: 30px;\n  height: 30px;\n  cursor: pointer;\n  outline: none;\n  background: url(" + ___CSS_LOADER_URL___0___ + ");\n  background-position: 0 -299px;\n  background-size: 32px 544px;\n}\n\n.jigsaw-canvas, .jigsaw-sliderContainer, .jigsaw-sliderContainer .jigsaw-sliderMask, .jigsaw-slider {\n  border-radius: 2px;\n}", ""]);
+exports.push([module.i, ".jigsaw-container{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;font-size:0}.jigsaw-container,.jigsaw-container:before,.jigsaw-container:after,.jigsaw-container *,.jigsaw-container *:before,.jigsaw-container *:after{-webkit-box-sizing:border-box;box-sizing:border-box}.jigsaw-container .jigsaw-canvas,.jigsaw-container .jigsaw-wrapper,.jigsaw-container .jigsaw-slider{border-radius:2px}.jigsaw-container .jigsaw-block{position:absolute;left:0;top:0;cursor:-webkit-grab;cursor:grab}.jigsaw-container .jigsaw-block:active{cursor:-webkit-grabbing;cursor:grabbing}.jigsaw-container .jigsaw-sliderMask{position:absolute;left:0;top:0;width:40px;height:100%;border-radius:2px}.jigsaw-container .jigsaw-sliderText{font-size:14px}.jigsaw-container .jigsaw-slider{position:absolute;top:0;left:0;width:40px;height:40px;background:#fff;-webkit-box-shadow:0 0 3px rgba(0,0,0,.3);box-shadow:0 0 3px rgba(0,0,0,.3);-webkit-transition:background .2s linear;transition:background .2s linear;cursor:-webkit-grab;cursor:grab}.jigsaw-container .jigsaw-slider:active{cursor:-webkit-grabbing;cursor:grabbing}.jigsaw-container .jigsaw-sliderIcon{position:absolute;top:15px;left:13px;width:14px;height:12px;background:url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") 0 -26px;background-size:32px 544px}.jigsaw-container .jigsaw-refreshIcon{position:absolute;right:0;top:0;width:30px;height:30px;cursor:pointer;outline:none;background:url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");background-position:0 -299px;background-size:32px 544px}.jigsaw-container .jigsaw-wrapper{position:relative;text-align:center;width:300px;height:40px;line-height:40px;margin-top:15px;background:#f7f9fa;color:#45494c;-webkit-box-shadow:0 0 0 1px #e4e7eb;box-shadow:0 0 0 1px #e4e7eb}.jigsaw-container .jigsaw-wrapper.jigsaw--moving .jigsaw-sliderText,.jigsaw-container .jigsaw-wrapper.jigsaw--error .jigsaw-sliderText,.jigsaw-container .jigsaw-wrapper.jigsaw--success .jigsaw-sliderText{display:none}.jigsaw-container .jigsaw-wrapper.jigsaw--moving .jigsaw-slider{background-color:#1991fa}.jigsaw-container .jigsaw-wrapper.jigsaw--moving .jigsaw-slider .jigsaw-sliderIcon{background-position:0 0}.jigsaw-container .jigsaw-wrapper.jigsaw--moving .jigsaw-sliderMask{-webkit-box-shadow:0 0 0 1px #1991fa;box-shadow:0 0 0 1px #1991fa;background:#d1e9fe}.jigsaw-container .jigsaw-wrapper.jigsaw--success .jigsaw-slider{background-color:#52ccba}.jigsaw-container .jigsaw-wrapper.jigsaw--success .jigsaw-sliderMask{background-color:#d2f4ef;-webkit-box-shadow:0 0 0 1px #52ccba;box-shadow:0 0 0 1px #52ccba}.jigsaw-container .jigsaw-wrapper.jigsaw--success .jigsaw-sliderIcon{background-position:0 -13px}.jigsaw-container .jigsaw-wrapper.jigsaw--error .jigsaw-slider{background-color:#f57a7a}.jigsaw-container .jigsaw-wrapper.jigsaw--error .jigsaw-sliderMask{background-color:#fce1e1;-webkit-box-shadow:0 0 0 1px #f57a7a;box-shadow:0 0 0 1px #f57a7a}.jigsaw-container .jigsaw-wrapper.jigsaw--error .jigsaw-sliderIcon{top:14px;background-position:0 -67px}", ""]);
+// Exports
+module.exports = exports;
 
 
 /***/ }),
@@ -616,7 +647,7 @@ module.exports = function (useSourceMap) {
       var content = cssWithMappingToString(item, useSourceMap);
 
       if (item[2]) {
-        return "@media ".concat(item[2], "{").concat(content, "}");
+        return "@media ".concat(item[2], " {").concat(content, "}");
       }
 
       return content;
@@ -631,32 +662,18 @@ module.exports = function (useSourceMap) {
       modules = [[null, modules, '']];
     }
 
-    var alreadyImportedModules = {};
+    for (var i = 0; i < modules.length; i++) {
+      var item = [].concat(modules[i]);
 
-    for (var i = 0; i < this.length; i++) {
-      // eslint-disable-next-line prefer-destructuring
-      var id = this[i][0];
-
-      if (id != null) {
-        alreadyImportedModules[id] = true;
-      }
-    }
-
-    for (var _i = 0; _i < modules.length; _i++) {
-      var item = modules[_i]; // skip already imported module
-      // this implementation is not 100% perfect for weird media query combinations
-      // when a module is imported multiple times with different media queries.
-      // I hope this will never occur (Hey this way we have smaller bundles)
-
-      if (item[0] == null || !alreadyImportedModules[item[0]]) {
-        if (mediaQuery && !item[2]) {
+      if (mediaQuery) {
+        if (!item[2]) {
           item[2] = mediaQuery;
-        } else if (mediaQuery) {
-          item[2] = "(".concat(item[2], ") and (").concat(mediaQuery, ")");
+        } else {
+          item[2] = "".concat(mediaQuery, " and ").concat(item[2]);
         }
-
-        list.push(item);
       }
+
+      list.push(item);
     }
   };
 
@@ -705,7 +722,7 @@ module.exports = function (url, options) {
   } // eslint-disable-next-line no-underscore-dangle, no-param-reassign
 
 
-  url = url.__esModule ? url.default : url;
+  url = url && url.__esModule ? url.default : url;
 
   if (typeof url !== 'string') {
     return url;

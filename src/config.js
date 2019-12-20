@@ -6,7 +6,7 @@ const config = {
   sliderLen: 40, // 滑块边长
   sliderRealLen: 0, // 滑块实际边长
   sliderRadius: 9, // 滑块半径
-  classNameHead: 'jigsaw-'
+  classNameHead: 'jigsaw'
 }
 config.sliderRealLen = config.sliderLen + config.sliderRadius * 2 + config.borderWidth * 2
 

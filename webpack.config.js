@@ -21,11 +21,18 @@ module.exports = {
     rules: [
       { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' },
       {
-        test: /\.css$/,
+        test: /\.s[ac]ss$/i,
         use: [
           'style-loader',
           'css-loader',
-          'postcss-loader'
+          'postcss-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              // Prefer `dart-sass`
+              implementation: require('sass'),
+            }
+          }
         ] 
       },
       {

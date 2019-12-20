@@ -58,13 +58,39 @@ export function createElement (tagName, className) {
   return elment
 }
 
-export function addClass (tag, className) {
-  tag.classList.add(className)
+export function hasClass(obj, cls) {
+  return obj.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'))
 }
 
-export function removeClass (tag, className) {
-  tag.classList.remove(className)
+export function addClass(obj, cls) {
+  if (!hasClass(obj, cls)) {
+    if (obj.className) obj.className += ' '
+    obj.className += cls
+  }
 }
+
+export function removeClass(obj, cls) {
+  if (hasClass(obj, cls)) {
+    var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)')
+    obj.className = obj.className.replace(reg, ' ')
+  }
+}  
+
+export function toggleClass(obj, cls){
+  if (hasClass(obj,cls)) {
+    removeClass(obj, cls)
+  } else {
+    addClass(obj, cls)
+  }
+}
+
+// export function addClass (tag, className) {
+//   tag.classList.add(className)
+// }
+
+// export function removeClass (tag, className) {
+//   tag.classList.remove(className)
+// }
 
 export function getRandomImgSrc (images) {
   // '//picsum.photos/300/150/?image=' + randomNum(0, 1084)

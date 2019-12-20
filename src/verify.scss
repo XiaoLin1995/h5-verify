@@ -1,0 +1,135 @@
+.jigsaw-container {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-touch-callout: none;
+  user-select: none;
+  font-size: 0;
+  &, &:before, &:after, *, *:before, *:after {
+    box-sizing: border-box;
+  }
+
+  .jigsaw-canvas,
+  .jigsaw-wrapper,
+  .jigsaw-slider {
+    border-radius: 2px;
+  }
+
+  .jigsaw-block {
+    position: absolute;
+    left: 0;
+    top: 0;
+    cursor: grab;
+    &:active {
+      cursor: grabbing;
+    }
+  }
+  .jigsaw-sliderMask {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 100%;
+    border-radius: 2px;
+  }
+  .jigsaw-sliderText {
+    font-size: 14px;
+  }
+
+  .jigsaw-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    transition: background .2s linear;
+    cursor: grab;
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  .jigsaw-sliderIcon {
+    position: absolute;
+    top: 15px;
+    left: 13px;
+    width: 14px;
+    height: 12px;
+    background: url(./img/icon_light.png) 0 -26px;
+    background-size: 32px 544px;;
+  }
+  
+  .jigsaw-refreshIcon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    outline: none;
+    background: url(./img/icon_light.png);
+    background-position: 0 -299px;
+    background-size: 32px 544px;
+  }
+
+  .jigsaw-wrapper {
+    position: relative;
+    text-align: center;
+    width: 300px;
+    height: 40px;
+    line-height: 40px;
+    margin-top: 15px;
+    background: #f7f9fa;
+    color: #45494c;
+    box-shadow: 0 0 0 1px #e4e7eb;
+    &.jigsaw--moving, &.jigsaw--error, &.jigsaw--success {
+      .jigsaw-sliderText {
+        display: none;
+      }
+    }
+    // moving
+    &.jigsaw--moving {
+      .jigsaw-slider {
+        background-color: #1991FA;
+        .jigsaw-sliderIcon {
+          background-position: 0 0;
+        }
+      }
+      .jigsaw-sliderMask {
+        box-shadow: 0 0 0 1px #1991FA;
+        background: #d1e9fe;
+      }
+    }
+    // successs
+    &.jigsaw--success {
+      .jigsaw-slider {
+        background-color: #52CCBA;
+      }
+      .jigsaw-sliderMask {
+        background-color: #D2F4EF;
+        box-shadow: 0 0 0 1px #52CCBA;
+      }
+      .jigsaw-sliderIcon {
+        background-position: 0 -13px;
+      }
+    }
+    // error
+    &.jigsaw--error {
+      .jigsaw-slider {
+        background-color: #f57a7a;
+      }
+      .jigsaw-sliderMask {
+        background-color: #fce1e1;
+        box-shadow: 0 0 0 1px #f57a7a;
+      }
+      .jigsaw-sliderIcon {
+        top: 14px;
+        background-position: 0 -67px;
+      }
+    }
+  }
+}
